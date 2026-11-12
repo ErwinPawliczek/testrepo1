@@ -45,7 +45,7 @@ Replace these examples with the real contracts before another workstream depends
 |----|------------------------|--------|--------|--------------|----------|
 | WS-1 | Person A + agent (placeholder) | `frontend/` | todo | — | — |
 | WS-2 | Person B + agent (placeholder) | `backend/` | todo | — | — |
-| WS-3 | Person C + agent (placeholder) | `ml/` | todo | — | — |
+| WS-3 | @nevinjosephtx + Claude Code | `ml/` | in-progress | T-2: `ml/make_synthetic.py` synthetic dev CSV | — |
 
 Status is one of `todo`, `in-progress`, `review`, `done`. Only the owning workstream edits its row.
 
