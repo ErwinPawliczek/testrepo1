@@ -1,6 +1,6 @@
 # Agent rules
 
-Every coding agent follows this checklist in order. Do not edit `PLAN.md`. Only the orchestrator (ErwinPawliczek) edits it.
+Every coding agent follows this checklist in order. Do not edit `PLAN.md`. Only ErwinPawliczek edits it, and only on a pull request titled `orchestrator:` or whose body contains `ORCH`.
 
 ## 1. Start-of-task
 
@@ -22,7 +22,7 @@ Before every new chunk of work:
 
 ## 3. Opening PR
 
-1. On the first commit, open a draft pull request into `main`. The body must contain `Closes #<issue>` for the issue you claimed.
+1. On the first commit, open a draft pull request into `main`. The body must contain `Closes #<issue>` for the issue you claimed. Writing `ORCH` does not replace that line.
 2. Keep pushing later commits to that same branch.
 3. Mark the pull request Ready for review when the task is done.
 

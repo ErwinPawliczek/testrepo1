@@ -1,10 +1,12 @@
-## Closes #
+## Linked issue
 
-<!-- Required. The claimed issue, written as Closes #N. -->
+Closes #
+
+<!-- Required. Put the claimed issue on the line above, as Closes #N. -->
 
 ## Workstream ID
 
-<!-- Required. WS-1, WS-2, WS-3, or ORCH. -->
+<!-- Required. WS-1, WS-2, or WS-3. -->
 
 ## What changed
 

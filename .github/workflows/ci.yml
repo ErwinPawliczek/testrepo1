@@ -26,7 +26,7 @@ jobs:
           fi
           echo "PLAN.md present"
 
-      - name: PR body contains a Workstream ID or Closes reference
+      - name: PR body links an issue, or is an orchestrator PR
         if: github.event_name == 'pull_request'
         run: |
           python3 - << 'PY'
@@ -34,34 +34,60 @@ jobs:
 
           with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as handle:
               event = json.load(handle)
-          body = ((event.get("pull_request") or {}).get("body")) or ""
-          workstream = re.search(r"\b(?:WS-\d+|ORCH)\b", body)
+          pr = event.get("pull_request") or {}
+          body = pr.get("body") or ""
+          title = (pr.get("title") or "").lstrip()
+          author = ((pr.get("user") or {}).get("login")) or ""
+
           closes = re.search(r"(?i)\bCloses\s+#\d+\b", body)
-          if not workstream and not closes:
-              print(
-                  "PR body must contain a Workstream ID (WS-1, WS-2, WS-3, or ORCH) "
-                  'or a "Closes #N" reference.'
-              )
-              sys.exit(1)
-          if workstream:
-              print(f"Workstream ID found: {workstream.group(0)}")
+          # Temporary fallback so open PRs #1 and #2 (WS-2 / WS-3, no Closes #) still pass.
+          # Remove this once those pull requests have merged.
+          workstream = re.search(r"\bWS-\d+\b", body)
+          orchestrator = author == "ErwinPawliczek" and (
+              title.startswith("orchestrator:") or re.search(r"\bORCH\b", body)
+          )
+
           if closes:
               print(f"Issue reference found: {closes.group(0)}")
+          elif orchestrator:
+              print("Orchestrator pull request accepted for ErwinPawliczek.")
+          elif workstream:
+              print(
+                  f"Workstream ID found: {workstream.group(0)} "
+                  "(fallback until open workstream pull requests #1 and #2 merge)."
+              )
+          else:
+              print(
+                  'PR body must contain "Closes #N". '
+                  "ORCH is accepted only for ErwinPawliczek. "
+                  "A Workstream ID (WS-1, WS-2, WS-3) is still accepted until pull requests #1 and #2 merge."
+              )
+              sys.exit(1)
           PY
 
-      - name: Only the orchestrator edits PLAN.md
+      - name: Only an orchestrator PR edits PLAN.md
         if: github.event_name == 'pull_request'
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
           python3 - << 'PY'
-          import os, subprocess, sys
+          import json, os, re, subprocess, sys
 
-          author = os.environ["AUTHOR"]
-          if author == "ErwinPawliczek":
-              print("Author is ErwinPawliczek; PLAN.md edits are allowed.")
+          with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as handle:
+              event = json.load(handle)
+          pr = event.get("pull_request") or {}
+          body = pr.get("body") or ""
+          title = (pr.get("title") or "").lstrip()
+          author = ((pr.get("user") or {}).get("login")) or ""
+          orchestrator = author == "ErwinPawliczek" and (
+              title.startswith("orchestrator:") or re.search(r"\bORCH\b", body)
+          )
+          if orchestrator:
+              print(
+                  "Orchestrator pull request (ErwinPawliczek, title orchestrator: or body ORCH); "
+                  "PLAN.md edits are allowed."
+              )
               sys.exit(0)
 
           diff = subprocess.check_output(
@@ -77,8 +103,8 @@ jobs:
           changed = {line.strip() for line in diff.splitlines() if line.strip()}
           if "PLAN.md" in changed:
               print(
-                  "PLAN.md is maintained by the orchestrator (ErwinPawliczek). "
-                  "This pull request must not modify it."
+                  "PLAN.md edits are allowed only when the author is ErwinPawliczek and the "
+                  'pull request title starts with "orchestrator:" or the body contains ORCH.'
               )
               sys.exit(1)
           print("PLAN.md unchanged.")

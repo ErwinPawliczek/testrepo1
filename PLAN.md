@@ -32,6 +32,7 @@ Shared API shapes and data schemas live in `contracts/`. Agents build against th
 |------|----------|-----|
 | 2026-11-12 | One shared `PLAN.md`. Workstreams own `frontend/`, `backend/`, and `ml/`. Contract changes are separate pull requests labelled `contract-change`. | Three agents can work in parallel without overwriting each other. |
 | 2026-11-12 | Synchronized workflow v2. GitHub Issues are the task queue. A pinned `SYNC` issue is the live status board. `PLAN.md` is edited only by the orchestrator. Contracts live in `contracts/`. Agents open a draft pull request on the first commit. | Per-row status in `PLAN.md` caused merge conflicts, and agents only saw each other's work at pull-request time. |
+| 2026-11-12 | CI allows a `PLAN.md` edit only when the author is ErwinPawliczek and the pull request title starts with `orchestrator:` or the body contains `ORCH`. `ORCH` does not replace `Closes #N` for anyone else. | A workstream pull request on the orchestrator's GitHub account must not edit `PLAN.md`, and other agents must not skip the issue link by writing `ORCH`. |
 
 ## Changelog
 
