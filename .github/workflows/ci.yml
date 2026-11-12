@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: PLAN.md and workstream id
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PLAN.md exists
+        run: |
+          if [ ! -f PLAN.md ]; then
+            echo "PLAN.md is missing. It is the shared plan and must stay in the repo."
+            exit 1
+          fi
+          echo "PLAN.md present"
+
+      - name: PR body contains a Workstream ID
+        if: github.event_name == 'pull_request'
+        run: |
+          python3 - << 'PY'
+          import json, os, re, sys
+
+          with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as handle:
+              event = json.load(handle)
+          body = ((event.get("pull_request") or {}).get("body")) or ""
+          match = re.search(r"\bWS-\d+\b", body)
+          if not match:
+              print("PR body must contain a Workstream ID such as WS-1, WS-2, or WS-3.")
+              sys.exit(1)
+          print(f"Workstream ID found: {match.group(0)}")
+          PY
+
+  lint-test:
+    name: lint and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: placeholder lint and test
+        run: |
+          echo "No project lint or tests yet. This step is a no-op until application code exists."

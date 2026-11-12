@@ -1,0 +1,9 @@
+# Placeholder owners per workstream folder.
+# Commented out so missing GitHub handles do not break CODEOWNERS.
+# /frontend/ @person-a
+# /backend/  @person-b
+# /ml/       @person-c
+
+/PLAN.md   @ErwinPawliczek
+/AGENTS.md @ErwinPawliczek
+/.github/  @ErwinPawliczek
