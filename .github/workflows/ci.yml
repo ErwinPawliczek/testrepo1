@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: PLAN.md exists
         run: |
@@ -24,7 +26,7 @@ jobs:
           fi
           echo "PLAN.md present"
 
-      - name: PR body contains a Workstream ID
+      - name: PR body contains a Workstream ID or Closes reference
         if: github.event_name == 'pull_request'
         run: |
           python3 - << 'PY'
@@ -33,11 +35,53 @@ jobs:
           with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as handle:
               event = json.load(handle)
           body = ((event.get("pull_request") or {}).get("body")) or ""
-          match = re.search(r"\bWS-\d+\b", body)
-          if not match:
-              print("PR body must contain a Workstream ID such as WS-1, WS-2, or WS-3.")
+          workstream = re.search(r"\b(?:WS-\d+|ORCH)\b", body)
+          closes = re.search(r"(?i)\bCloses\s+#\d+\b", body)
+          if not workstream and not closes:
+              print(
+                  "PR body must contain a Workstream ID (WS-1, WS-2, WS-3, or ORCH) "
+                  'or a "Closes #N" reference.'
+              )
               sys.exit(1)
-          print(f"Workstream ID found: {match.group(0)}")
+          if workstream:
+              print(f"Workstream ID found: {workstream.group(0)}")
+          if closes:
+              print(f"Issue reference found: {closes.group(0)}")
+          PY
+
+      - name: Only the orchestrator edits PLAN.md
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          python3 - << 'PY'
+          import os, subprocess, sys
+
+          author = os.environ["AUTHOR"]
+          if author == "ErwinPawliczek":
+              print("Author is ErwinPawliczek; PLAN.md edits are allowed.")
+              sys.exit(0)
+
+          diff = subprocess.check_output(
+              [
+                  "git",
+                  "diff",
+                  "--name-only",
+                  os.environ["BASE_SHA"],
+                  os.environ["HEAD_SHA"],
+              ],
+              text=True,
+          )
+          changed = {line.strip() for line in diff.splitlines() if line.strip()}
+          if "PLAN.md" in changed:
+              print(
+                  "PLAN.md is maintained by the orchestrator (ErwinPawliczek). "
+                  "This pull request must not modify it."
+              )
+              sys.exit(1)
+          print("PLAN.md unchanged.")
           PY
 
   lint-test:
