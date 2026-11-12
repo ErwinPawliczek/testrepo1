@@ -43,7 +43,7 @@ Replace these examples with the real contracts before another workstream depends
 
 | ID | Owner (person + agent) | Folder | Status | Current task | Blockers |
 |----|------------------------|--------|--------|--------------|----------|
-| WS-1 | Person A + agent (placeholder) | `frontend/` | todo | — | — |
+| WS-1 | @freakybongwater + Claude Code | `frontend/` | review | T-1 — static `frontend/index.html` with a Check API button | none |
 | WS-2 | Person B + agent (placeholder) | `backend/` | todo | — | — |
 | WS-3 | Person C + agent (placeholder) | `ml/` | todo | — | — |
 
