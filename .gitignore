@@ -1,0 +1,7 @@
+# Generated data stays local (see ml/make_synthetic.py)
+data/
+*.csv
+
+# Python
+__pycache__/
+*.pyc
