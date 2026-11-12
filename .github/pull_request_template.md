@@ -1,19 +1,17 @@
+## Linked issue
+
+Closes #
+
+<!-- Required. Put the claimed issue on the line above, as Closes #N. -->
+
 ## Workstream ID
 
-<!-- Required. Put the id alone on the following line (WS-1, WS-2, or WS-3). -->
-
-## Task
-
-<!-- Current task from your PLAN.md row. -->
+<!-- Required. WS-1, WS-2, or WS-3. -->
 
 ## What changed
 
-## Interface contracts touched
+## Contracts touched
 
-<!-- yes or no. yes means this PR is only a contract change and is labelled contract-change. -->
-
-## PLAN.md updated
-
-- [ ] Updated this workstream's row only (status, current task, blockers)
+<!-- yes or no. yes means this PR only changes contracts/ and is labelled contract-change. -->
 
 ## Testing

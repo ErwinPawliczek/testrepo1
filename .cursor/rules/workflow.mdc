@@ -3,12 +3,4 @@ description: Multi-agent hackathon workflow. Follow AGENTS.md on every change.
 alwaysApply: true
 ---
 
-Follow `AGENTS.md` at the repo root. Summary:
-
-- Read `PLAN.md` before editing anything.
-- Edit only your workstream folder (`frontend/`, `backend/`, or `ml/`), plus your own row in the `PLAN.md` workstreams table.
-- Never edit another workstream's `PLAN.md` row.
-- An interface-contract change is its own pull request labelled `contract-change`.
-- Every pull request names its workstream ID and task, updates that workstream's `PLAN.md` row, and stays small.
-- Address orchestrator review comments with new commits on the same branch.
-- Never force-push `main`.
+Follow `AGENTS.md` before every change. It is the checklist for claiming a GitHub Issue, syncing before each chunk of work, opening a draft pull request, and handling review.
