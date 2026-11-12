@@ -39,3 +39,5 @@ Shared API shapes and data schemas live in `contracts/`. Agents build against th
 Append one line per merged pull request. Newest at the bottom.
 
 - #2 WS-3 synthetic dev CSV (`ml/make_synthetic.py`).
+- #1 WS-2 GET /health with CORS (backend/app.py, backend/requirements.txt).
+- #7 Orchestrator: synchronized workflow v2 (issues as task queue, pinned SYNC board, orchestrator-only PLAN.md, contracts/ folder with api.md).
